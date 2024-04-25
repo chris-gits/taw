@@ -1,0 +1,15 @@
+[package]
+name = "taw"
+version = "0.1.0"
+edition = "2021"
+description = "A command-line directory and file searcher that utilizes REGEX."
+authors = ["Christian Alexander Marrero"]
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = { version = "4.5.4", features = ["derive"] }
+colored = "2.1.0"
+jwalk = "0.8.1"
+regex = "1.10.4"
