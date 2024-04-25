@@ -21,6 +21,9 @@ struct Arguments {
 	files: bool,
 	#[arg(short, long, groups = ["redundant_filters", "cant_read_dirs"], help = "Only match directories")]
 	directories: bool,
+	// Regex Config
+	#[arg(short, long, help = "Disable REGEX case-sensitivity")]
+	ignore_case: bool,
 	// Pattern Matches
 	#[arg(short, long, help = "Match entries' name to REGEX pattern")]
 	name: Option<Regex>,
@@ -65,6 +68,21 @@ fn main() {
 			}
 			Ok(canon_path) => canon_path
 		};
+	}
+
+	if args.ignore_case {
+		if let Some(name_regex) = args.name {
+			args.name = match Regex::new(format!("(?i){}", name_regex.as_str()).as_str()) {
+				Err(_) => {fail!("Could not insert case-insensitivity flag to name pattern.");},
+				Ok(modified_regex) => Some(modified_regex),
+			}
+		}
+		if let Some(text_regex) = args.text {
+			args.text = match Regex::new(format!("(?i){}", text_regex.as_str()).as_str()) {
+				Err(_) => {fail!("Could not insert case-insensitivity flag to text pattern.");},
+				Ok(modified_regex) => Some(modified_regex),
+			}
+		}
 	}
 
 	let mut walker = WalkDir::new(&args.origin).skip_hidden(false);
