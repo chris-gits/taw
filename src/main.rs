@@ -39,7 +39,7 @@ fn main() {
 
 	macro_rules! fail {
 		($message:expr) => {
-			println!("[FAILURE] {}", $message.red().bold());
+			println!("{}", $message.red().bold());
 			std::process::exit(1);
 		};
 	}
