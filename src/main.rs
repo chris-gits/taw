@@ -124,7 +124,7 @@ fn main() {
 						let start = first_capture.start();
 						let end = first_capture.end();
 						result_string += file_name.get(last_index..start).unwrap();
-						result_string += &file_name.get(start..end).unwrap().green().bold().to_string();
+						result_string += &file_name.get(start..end).unwrap().green().bold().underline().to_string();
 						last_index = end;
 					}
 					if first_flag { continue }
@@ -161,13 +161,13 @@ fn main() {
 							let first_capture = capture.get(0).unwrap();
 							let start = first_capture.start();
 							let end = first_capture.end();
-							result_string += &line.get(last_index..start).unwrap().dimmed().to_string();
-							result_string += &line.get(start..end).unwrap().green().bold().to_string();
+							result_string += &line.get(last_index..start).unwrap().dimmed().italic().to_string();
+							result_string += &line.get(start..end).unwrap().green().bold().underline().to_string();
 							last_index = end;
 						}
 						if first_flag { continue }
 						else { 
-							line_matches.push(result_string + &line.get(last_index..).unwrap().dimmed().to_string())
+							line_matches.push(result_string + &line.get(last_index..).unwrap().dimmed().italic().to_string())
 						}
 					}
 					if !line_matched_flag { continue }
