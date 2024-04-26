@@ -134,7 +134,7 @@ fn main() {
 
 			let result_lines = match &args.text {
 				None => vec![],
-				Some(_text_regex) => {
+				Some(text_regex) => {
 					if entry_path.is_dir() { continue }
 					let mut line_matches: Vec<String> = vec![];
 					let mut line_matched_flag = false;
@@ -150,7 +150,7 @@ fn main() {
 						let mut result_string = String::new();
 						let mut first_flag = true;
 						let mut last_index = 0;
-						for capture in _text_regex.captures_iter(line) {
+						for capture in text_regex.captures_iter(line) {
 							if !line_matched_flag { line_matched_flag = true }
 							if first_flag {
 								first_flag = false;
@@ -178,9 +178,6 @@ fn main() {
 			// Display results
 			println!("{result_path}");
 			if !result_lines.is_empty() { println!("{}", result_lines.join("\n")) }
-
 		}
 	}
-
-
 }
