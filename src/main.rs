@@ -155,7 +155,7 @@ fn main() {
 							if first_flag {
 								first_flag = false;
 								result_string += "\t";
-								result_string += &line_index.to_string().bold().to_string();
+								result_string += &(line_index + 1).to_string().bold().to_string();
 								result_string += &": ".bold().to_string();
 							}
 							let first_capture = capture.get(0).unwrap();
