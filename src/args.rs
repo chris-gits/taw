@@ -11,7 +11,7 @@ pub struct Arguments {
 	pub origin: PathBuf,
 	#[arg(short, long, help = "Walk recursively")]
 	pub recursive: bool,
-	#[arg(short, long, help = "Canonicalize output paths")]
+	#[arg(short, long, help = "Canonicalize display paths")]
 	pub canonicalize: bool,
 
 	// Type Filter
@@ -21,13 +21,13 @@ pub struct Arguments {
 	pub directories: bool,
 
 	// Regex Config
-	#[arg(short, long, help = "Disable REGEX case-sensitivity")]
+	#[arg(short, long, help = "Disable pattern case-sensitivity")]
 	pub ignore_case: bool,
 
 	// Pattern Matches
-	#[arg(short, long, help = "Match entries' name to REGEX pattern")]
+	#[arg(short, long, help = "Match entries' name to pattern")]
 	pub name: Option<Regex>,
-	#[arg(short, long, groups = ["directories_have_no_text", "text_display_needs_newlines"], help = "Match entries' readable text to REGEX pattern")]
+	#[arg(short, long, groups = ["directories_have_no_text", "text_display_needs_newlines"], help = "Match entries' readable text to pattern")]
 	pub text: Option<Regex>,
 
 	// Display Options

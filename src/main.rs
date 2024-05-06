@@ -30,34 +30,34 @@ fn main() {
 	}
 	macro_rules! entry_warn {
 		($path:expr, $message:expr) => {
-			warn!(format!("{}: {}", $message, $path.to_string_lossy()));
+			warn!(format!("{} \"{}\"", $message, $path.to_string_lossy()));
 			continue;
 		};
 	}
 
 	// Validity checks
-	if !args.origin.exists() { fail!(format!("\"{}\" does not exist.", args.origin.to_string_lossy())); }
+	if !args.origin.exists() { fail!(format!("\"{}\" does not exist", args.origin.to_string_lossy())); }
 
 	// Args. Transformation
 	if args.canonicalize {
 		args.origin = match args.origin.canonicalize() {
 			Err(_) => {
-				fail!(format!("Could not canonicalize origin \"{}\"", args.origin.to_string_lossy()));
+				fail!(format!("Could not canonicalize \"{}\"", args.origin.to_string_lossy()));
 			}
 			Ok(canon_path) => canon_path
 		};
 	}
 	if args.ignore_case {
-		if let Some(name_regex) = args.name {
-			args.name = match Regex::new(format!("(?i){}", name_regex.as_str()).as_str()) {
-				Err(_) => {fail!("Could not insert case-insensitivity flag to name pattern.");},
-				Ok(modified_regex) => Some(modified_regex),
+		if let Some(name_pattern) = args.name {
+			args.name = match Regex::new(format!("(?i){}", name_pattern.as_str()).as_str()) {
+				Err(_) => {fail!("Could not make name pattern case-insensitive");},
+				Ok(modified_pattern) => Some(modified_pattern),
 			}
 		}
-		if let Some(text_regex) = args.text {
-			args.text = match Regex::new(format!("(?i){}", text_regex.as_str()).as_str()) {
-				Err(_) => {fail!("Could not insert case-insensitivity flag to text pattern.");},
-				Ok(modified_regex) => Some(modified_regex),
+		if let Some(text_pattern) = args.text {
+			args.text = match Regex::new(format!("(?i){}", text_pattern.as_str()).as_str()) {
+				Err(_) => {fail!("Could not make text pattern case-insensitive");},
+				Ok(modified_pattern) => Some(modified_pattern),
 			}
 		}
 	}
@@ -82,12 +82,12 @@ fn main() {
 			// Name matcher evaluation
 			let display_path = match &args.name {
 				None => entry_path.to_string_lossy().to_string(),
-				Some(name_regex) => {
+				Some(name_pattern) => {
 					// File name retrieval
 					let entry_name = match entry_path.file_name() {
-						None => {entry_warn!(entry_path, "Could not retrieve entry name");},
+						None => {entry_warn!(entry_path, "Could not retrieve name");},
 						Some(file_name_osstr) => match file_name_osstr.to_str() {
-							None => {entry_warn!(entry_path, "Could not interpret entry name");},
+							None => {entry_warn!(entry_path, "Could not interpret name");},
 							Some(file_name_str) => file_name_str
 						}
 					};
@@ -96,7 +96,7 @@ fn main() {
 					let mut display_path_buf = String::new();
 					let mut first_capture = true;
 					let mut last_index = 0;
-					for capture in name_regex.captures_iter(entry_name) {
+					for capture in name_pattern.captures_iter(entry_name) {
 						// Parent path push to display path buffer upon first iteration
 						if first_capture {
 							first_capture = false;
@@ -127,7 +127,7 @@ fn main() {
 			// Text matcher evaluation
 			let display_text_lines = match &args.text {
 				None => vec![],
-				Some(text_regex) => {
+				Some(text_pattern) => {
 					// Directory skip
 					if entry_path.is_dir() { continue }
 
@@ -137,18 +137,18 @@ fn main() {
 					for (line_index, line) in
 					match String::from_utf8(
 						match read(entry_path.clone()) {
-							Err(_) => {entry_warn!(entry_path, "Could not open");},
+							Err(_) => {entry_warn!(entry_path, "Could not read");},
 							Ok(read_bytes) => read_bytes
 						}
 					) {
-						Err(_) => {entry_warn!(entry_path, "Could not read");},
+						Err(_) => {entry_warn!(entry_path, "Could not decode");},
 						Ok(read_string) => read_string
 					}.to_string().lines().enumerate() {
 						// Captures iteration
 						let mut display_line_buf = String::new();
 						let mut first_capture = true;
 						let mut last_index = 0;
-						for capture in text_regex.captures_iter(line) {
+						for capture in text_pattern.captures_iter(line) {
 							if !line_matched_flag { line_matched_flag = true }
 
 							// Text push from start of line to start of capture to display line buffer upon first iteration
@@ -187,7 +187,7 @@ fn main() {
 			if args.list {
 				entries_list.push(display_path);
 			} else {
-				println!("{display_path} ");
+				println!("{display_path}");
 			};
 			if !display_text_lines.is_empty() {
 				println!("{}", display_text_lines.join("\n"))
