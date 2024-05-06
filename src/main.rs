@@ -17,9 +17,9 @@ struct Arguments {
 	#[arg(short, long, help = "Canonicalize output paths")]
 	canonicalize: bool,
 	// Type Filter
-	#[arg(short, long, group = "redundant_filters", help = "Only match files")]
+	#[arg(short, long, group = "default_filter_redundance", help = "Only match files")]
 	files: bool,
-	#[arg(short, long, groups = ["redundant_filters", "cant_read_dirs"], help = "Only match directories")]
+	#[arg(short, long, groups = ["default_filter_redundance", "directories_have_no_text"], help = "Only match directories")]
 	directories: bool,
 	// Regex Config
 	#[arg(short, long, help = "Disable REGEX case-sensitivity")]
@@ -27,7 +27,7 @@ struct Arguments {
 	// Pattern Matches
 	#[arg(short, long, help = "Match entries' name to REGEX pattern")]
 	name: Option<Regex>,
-	#[arg(short, long, group = "cant_read_dirs", help = "Match entries' readable text to REGEX pattern")]
+	#[arg(short, long, group = "directories_have_no_text", help = "Match entries' readable text to REGEX pattern")]
 	text: Option<Regex>,
 	// Debug Flags
 	#[arg(short, long, help = "Enables debug warnings")]
