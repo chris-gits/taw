@@ -3,42 +3,12 @@ use regex::Regex;
 use jwalk::WalkDir;
 use colored::Colorize;
 
-use std::path::PathBuf;
 use std::fs::read;
 
-#[derive(Parser)]
-#[clap(version, about, author)]
-struct Arguments {
-	// Walker
-	#[arg(default_value = ".", help = "Path to be walked")]
-	origin: PathBuf,
-	#[arg(short, long, help = "Walk recursively")]
-	recursive: bool,
-	#[arg(short, long, help = "Canonicalize output paths")]
-	canonicalize: bool,
-	// Type Filter
-	#[arg(short, long, group = "default_filter_redundance", help = "Only match files")]
-	files: bool,
-	#[arg(short, long, groups = ["default_filter_redundance", "directories_have_no_text"], help = "Only match directories")]
-	directories: bool,
-	// Regex Config
-	#[arg(short, long, help = "Disable REGEX case-sensitivity")]
-	ignore_case: bool,
-	// Pattern Matches
-	#[arg(short, long, help = "Match entries' name to REGEX pattern")]
-	name: Option<Regex>,
-	#[arg(short, long, groups = ["directories_have_no_text", "text_display_needs_newlines"], help = "Match entries' readable text to REGEX pattern")]
-	text: Option<Regex>,
-	// Display Options
-	#[arg(short, long, group = "text_display_needs_newlines", help = "Display entries in a non-line-breaking format")]
-	list: bool,
-	// Debug Flags
-	#[arg(short, long, help = "Enables debug warnings")]
-	warnings: bool
-}
+mod args;
 
 fn main() {
-	let mut args = Arguments::parse();
+	let mut args = args::Arguments::parse();
 
 	macro_rules! fail {
 		($message:expr) => {
