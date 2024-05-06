@@ -27,8 +27,11 @@ struct Arguments {
 	// Pattern Matches
 	#[arg(short, long, help = "Match entries' name to REGEX pattern")]
 	name: Option<Regex>,
-	#[arg(short, long, group = "directories_have_no_text", help = "Match entries' readable text to REGEX pattern")]
+	#[arg(short, long, groups = ["directories_have_no_text", "text_display_needs_newlines"], help = "Match entries' readable text to REGEX pattern")]
 	text: Option<Regex>,
+	// Display Options
+	#[arg(short, long, group = "text_display_needs_newlines", help = "Display entries in a non-line-breaking format")]
+	list: bool,
 	// Debug Flags
 	#[arg(short, long, help = "Enables debug warnings")]
 	warnings: bool
@@ -87,6 +90,8 @@ fn main() {
 
 	let mut walker = WalkDir::new(&args.origin).skip_hidden(false);
 	if !args.recursive { walker = walker.max_depth(1) }
+
+	let mut entries_list: Vec<String> = vec![];
 
 	for dir_entry_result in walker {
 		if let Ok(dir_entry) = dir_entry_result {
@@ -174,10 +179,20 @@ fn main() {
 					line_matches
 				}
 			};
-
+			
 			// Display results
-			println!("{result_path}");
-			if !result_lines.is_empty() { println!("{}", result_lines.join("\n")) }
+			if args.list {
+				entries_list.push(result_path);
+			} else {
+				println!("{result_path} ");
+			};
+			if !result_lines.is_empty() {
+				println!("{}", result_lines.join("\n"))
+			}
 		}
+	}
+
+	if entries_list.len() > 0 {
+		println!("{}", entries_list.join(" "));
 	}
 }
