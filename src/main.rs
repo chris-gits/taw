@@ -137,7 +137,7 @@ fn main() {
                     display_path_buf += &entry_name
                         .get(start..end)
                         .unwrap()
-                        .green()
+                        .red()
                         .bold()
                         .underline()
                         .to_string();
@@ -212,7 +212,7 @@ fn main() {
                         display_line_buf += &line
                             .get(start..end)
                             .unwrap()
-                            .green()
+                            .red()
                             .bold()
                             .underline()
                             .to_string();
