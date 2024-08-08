@@ -1,6 +1,6 @@
 [package]
 name = "taw"
-version = "1.1.5"
+version = "1.1.6"
 edition = "2021"
 description = "A command-line file-tree walker that utilizes REGEX matching."
 authors = ["Christian Alexander Marrero"]

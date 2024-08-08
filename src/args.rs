@@ -33,8 +33,10 @@ pub struct Arguments {
 	// Display Options
 	#[arg(short, long, group = "text_display_needs_newlines", help = "Display entries in a non-line-breaking format")]
 	pub list: bool,
+	#[arg(short, long, help = "Includes relative working directory (\"./\") in entries' path display")]
+	pub working_dir: bool,
     
 	// Debug Flags
-	#[arg(short, long, help = "Enables debug warnings")]
-	pub warnings: bool
+	#[arg(long, help = "Enables debug warnings")]
+	pub debug: bool
 }

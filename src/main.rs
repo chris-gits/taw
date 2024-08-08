@@ -23,7 +23,7 @@ fn main() {
     }
     macro_rules! warn {
         ($message:expr) => {
-            if args.warnings {
+            if args.debug {
                 println!("{}", $message.yellow());
             }
         };
@@ -99,7 +99,7 @@ fn main() {
         }
 
         // Name matcher evaluation
-        let display_path = match &args.name {
+        let mut display_path = match &args.name {
             None => entry_path.to_string_lossy().to_string(),
             Some(name_pattern) => {
                 // File name retrieval
@@ -154,6 +154,10 @@ fn main() {
                 }
             }
         };
+        // Trim relative working directory from display path
+        if !args.working_dir {
+            display_path = display_path.trim_start_matches("./").into();
+        }
 
         // Text matcher evaluation
         let display_text_lines = match &args.text {
