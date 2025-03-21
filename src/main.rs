@@ -6,6 +6,7 @@ use regex::Regex;
 
 // Standard Imports
 use std::fs::read;
+use std::env::current_dir;
 
 // Internal Imports
 mod args;
@@ -13,6 +14,9 @@ mod args;
 fn main() {
     // Args. Parse
     let mut args = args::Arguments::parse();
+    
+    // Current Directory
+    let working_dir = current_dir();
 
     // Internal macros
     macro_rules! fail {
@@ -100,7 +104,7 @@ fn main() {
 
         // Name matcher evaluation
         let display_path = match &args.name {
-            None => entry_path.to_string_lossy().to_string(),
+            None => entry_path.to_string_lossy().to_string().trim_start_matches("./").to_string(),
             Some(name_pattern) => {
                 // File name retrieval
                 let entry_name = match entry_path.file_name() {
@@ -124,8 +128,11 @@ fn main() {
                     if first_capture {
                         first_capture = false;
                         if let Some(parent_path) = entry_path.parent() {
-                            display_path_buf += &parent_path.to_string_lossy();
-                            display_path_buf += "/";
+                            let parent_path_str = parent_path.to_string_lossy();
+                            if parent_path_str != "." {
+                                display_path_buf += &parent_path_str;
+                                display_path_buf += "/";
+                            }
                         }
                     }
 

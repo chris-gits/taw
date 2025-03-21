@@ -1,6 +1,6 @@
 [package]
 name = "taw"
-version = "1.2.0"
+version = "1.2.1"
 edition = "2021"
 description = "A command-line file-tree walker that utilizes REGEX matching."
 authors = ["Christian Alexander Marrero"]
@@ -11,5 +11,6 @@ license = "MIT"
 [dependencies]
 clap = { version = "4.5.4", features = ["derive"] }
 colored = "2.1.0"
+colorize = "0.1.0"
 jwalk = "0.8.1"
 regex = "1.10.4"
